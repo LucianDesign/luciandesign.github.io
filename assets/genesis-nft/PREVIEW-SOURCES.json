@@ -1,0 +1,69 @@
+{
+  "note": "Web previews begin at the midpoint; full-length inputs preserved separately; user iCloud originals unchanged.",
+  "videos": [
+    {
+      "file": "motion-01.mp4",
+      "original_duration": 16.0,
+      "start_seconds": 8.0,
+      "preview_duration": 8.0,
+      "width": 960,
+      "height": 960
+    },
+    {
+      "file": "motion-02.mp4",
+      "original_duration": 16.0,
+      "start_seconds": 8.0,
+      "preview_duration": 8.0,
+      "width": 960,
+      "height": 960
+    },
+    {
+      "file": "motion-03.mp4",
+      "original_duration": 16.0,
+      "start_seconds": 8.0,
+      "preview_duration": 8.0,
+      "width": 960,
+      "height": 960
+    },
+    {
+      "file": "motion-04.mp4",
+      "original_duration": 16.0,
+      "start_seconds": 8.0,
+      "preview_duration": 8.0,
+      "width": 960,
+      "height": 960
+    },
+    {
+      "file": "motion-05.mp4",
+      "original_duration": 16.0,
+      "start_seconds": 8.0,
+      "preview_duration": 8.0,
+      "width": 960,
+      "height": 960
+    },
+    {
+      "file": "motion-06.mp4",
+      "original_duration": 16.0,
+      "start_seconds": 8.0,
+      "preview_duration": 8.0,
+      "width": 960,
+      "height": 960
+    },
+    {
+      "file": "motion-07.mp4",
+      "original_duration": 16.0,
+      "start_seconds": 8.0,
+      "preview_duration": 8.0,
+      "width": 960,
+      "height": 960
+    },
+    {
+      "file": "motion-08.mp4",
+      "original_duration": 14.0,
+      "start_seconds": 7.0,
+      "preview_duration": 7.0,
+      "width": 960,
+      "height": 960
+    }
+  ]
+}

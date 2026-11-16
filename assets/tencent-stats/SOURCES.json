@@ -1,0 +1,208 @@
+{
+  "project": "https://www.behance.net/gallery/125194871/Tencent-Sports-stats-UI-design",
+  "modules": [
+    {
+      "index": 0,
+      "images": [
+        {
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/fs_webp/2f80bc125194871.62278b72dd940.png",
+          "width": 1440,
+          "height": 914,
+          "type": "image",
+          "file": "module-00-1.webp"
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "images": [
+        {
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/fs_webp/c0b2e8125194871.622780ce88f9f.png",
+          "width": 1920,
+          "height": 1823,
+          "type": "image",
+          "file": "module-01-1.webp"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "images": [
+        {
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/source/8e289e125194871.622794eb245c4.gif",
+          "width": 1440,
+          "height": 800,
+          "type": "video",
+          "file": "module-02-1.mp4",
+          "poster": "module-02-1-poster.webp",
+          "duration": "3.600000"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "images": [
+        {
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/source/3c850f125194871.622780ce8a6a7.gif",
+          "width": 1440,
+          "height": 750,
+          "type": "video",
+          "file": "module-03-1.mp4",
+          "poster": "module-03-1-poster.webp",
+          "duration": "8.266667"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "images": [
+        {
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/fs_webp/86611a125194871.622780ce89f34.png",
+          "width": 1440,
+          "height": 1098,
+          "type": "image",
+          "file": "module-04-1.webp"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "images": [
+        {
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/source/2934cd125194871.62278b72dd427.gif",
+          "width": 1600,
+          "height": 900,
+          "type": "video",
+          "file": "module-05-1.mp4",
+          "poster": "module-05-1-poster.webp",
+          "duration": "5.400000"
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "images": [
+        {
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/source/fb96cf125194871.62278b72dcf21.gif",
+          "width": 1600,
+          "height": 900,
+          "type": "video",
+          "file": "module-06-1.mp4",
+          "poster": "module-06-1-poster.webp",
+          "duration": "7.366667"
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "images": [
+        {
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/fs_webp/49b280125194871.622794eb24b65.png",
+          "width": 1440,
+          "height": 1200,
+          "type": "image",
+          "file": "module-07-1.webp"
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "images": [
+        {
+          "src": "https://mir-s3-cdn-cf.behance.net/project_modules/source/c9fcd3125194871.622794eabacae.png",
+          "download_url": "https://mir-s3-cdn-cf.behance.net/project_modules/source/c9fcd3125194871.622794eabacae.png",
+          "local_file": "00-1.png",
+          "width": 294,
+          "height": 540,
+          "type": "image",
+          "file": "00-1.webp",
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/source/c9fcd3125194871.622794eabacae.png"
+        },
+        {
+          "src": "https://mir-s3-cdn-cf.behance.net/project_modules/source/74089f125194871.622794eab9a55.gif",
+          "download_url": "https://mir-s3-cdn-cf.behance.net/project_modules/source/74089f125194871.622794eab9a55.gif",
+          "local_file": "01-1.gif",
+          "width": 500,
+          "height": 810,
+          "type": "video",
+          "file": "01-1.mp4",
+          "poster": "01-1-poster.webp",
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/source/74089f125194871.622794eab9a55.gif"
+        },
+        {
+          "src": "https://mir-s3-cdn-cf.behance.net/project_modules/source/9fcf51125194871.622794eaba303.png",
+          "download_url": "https://mir-s3-cdn-cf.behance.net/project_modules/source/9fcf51125194871.622794eaba303.png",
+          "local_file": "02-1.png",
+          "width": 282,
+          "height": 540,
+          "type": "image",
+          "file": "02-1.webp",
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/source/9fcf51125194871.622794eaba303.png"
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "images": [
+        {
+          "src": "https://mir-s3-cdn-cf.behance.net/project_modules/source/5538e6125194871.6228d424bacc1.gif",
+          "download_url": "https://mir-s3-cdn-cf.behance.net/project_modules/source/5538e6125194871.6228d424bacc1.gif",
+          "local_file": "03-1.gif",
+          "width": 648,
+          "height": 1080,
+          "type": "video",
+          "file": "03-1.mp4",
+          "poster": "03-1-poster.webp",
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/source/5538e6125194871.6228d424bacc1.gif"
+        },
+        {
+          "src": "https://mir-s3-cdn-cf.behance.net/project_modules/source/d9e8d3125194871.6228d424bb1c5.png",
+          "download_url": "https://mir-s3-cdn-cf.behance.net/project_modules/source/d9e8d3125194871.6228d424bb1c5.png",
+          "local_file": "04-1.png",
+          "width": 624,
+          "height": 1080,
+          "type": "image",
+          "file": "04-1.webp",
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/source/d9e8d3125194871.6228d424bb1c5.png"
+        },
+        {
+          "src": "https://mir-s3-cdn-cf.behance.net/project_modules/source/5e24e5125194871.6228d424bb6b9.gif",
+          "download_url": "https://mir-s3-cdn-cf.behance.net/project_modules/source/5e24e5125194871.6228d424bb6b9.gif",
+          "local_file": "05-1.gif",
+          "width": 648,
+          "height": 1080,
+          "type": "video",
+          "file": "05-1.mp4",
+          "poster": "05-1-poster.webp",
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/source/5e24e5125194871.6228d424bb6b9.gif"
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "images": [
+        {
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/fs_webp/3d6503125194871.6228d4250b512.png",
+          "width": 1440,
+          "height": 300,
+          "type": "image",
+          "file": "module-10-1.webp"
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "images": [
+        {
+          "source": "https://mir-s3-cdn-cf.behance.net/project_modules/source/2c22fd125194871.611417d6d369c.gif",
+          "width": 1440,
+          "height": 150,
+          "type": "video",
+          "file": "module-11-1.mp4",
+          "poster": "module-11-1-poster.webp",
+          "duration": "3.600000"
+        }
+      ]
+    }
+  ]
+}
