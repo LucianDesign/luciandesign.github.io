@@ -162,3 +162,15 @@ html.pointer-mark-active input,html.pointer-mark-active textarea{cursor:text}
 
 /* Approximately twice as many points per area; align the hover symbols to this grid. */
 .hero-green-surface:before{background-size:13px 13px}
+
+/* A real transparent first-frame portrait is visible before JavaScript/3D loads. */
+#art .hero-poster{display:block;position:absolute;inset:0;z-index:3;pointer-events:none;opacity:1;visibility:visible;transition:opacity .55s ease,visibility 0s}
+#art .hero-poster .poster{display:block;filter:none;opacity:1;position:absolute;top:var(--poster-top,0px);left:var(--poster-left,60.1%);width:auto;max-width:none;height:var(--poster-height,100%);object-fit:contain;transform:translateX(-26.444%);transition:none}
+#art #scene{z-index:2;opacity:0;transition:none}
+#art.ready #scene{opacity:1}
+#art.ready .hero-poster{opacity:0;visibility:hidden;transition:opacity .55s ease,visibility 0s linear .55s}
+#art #loading{display:none}
+@media(max-width:1200px){#art .hero-poster .poster{left:var(--poster-left,50%);transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){#art .hero-poster,#art #scene{transition:none!important}}
+
+.monochrome-version:not(.hero-initialized) .hero:not(.hero-copy-layer){background-image:radial-gradient(circle,#3653001f 1px,transparent 1.5px);background-size:13px 13px;background-position:8px 8px}
