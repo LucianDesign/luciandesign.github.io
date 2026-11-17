@@ -79,10 +79,11 @@ function render(){
     frame.classList.toggle('sound-following',!park);sound.style.setProperty('--sound-x',`${x/r.width*100}%`);sound.style.setProperty('--sound-y',`${y/r.height*100}%`);
    }
    frame.addEventListener('pointerenter',e=>positionSound(e));frame.addEventListener('pointermove',e=>positionSound(e));frame.addEventListener('pointerleave',e=>positionSound(e,true));
-   frame.addEventListener('click',e=>{if(e.target.closest('button'))return;sound.click()});
+   frame.addEventListener('click',e=>{if(e.target.closest('button,.media-progress'))return;sound.click()});
 
    }
    const retry=button('Play video ▷','Play video',()=>{media.play().then(()=>retry.hidden=true).catch(()=>{retry.textContent='Try playing again'})});retry.className='media-retry';retry.hidden=true;media.addEventListener('playing',()=>retry.hidden=true);frame.append(media,retry);watchVideo(media);
+   if(item.hasAudio===true)media.addEventListener('loadedmetadata',()=>{if(media.duration>=30&&!frame.querySelector('.media-progress'))addProgress(frame,media,index===0)});
   }else{media.alt=item.caption||`Reah project visual ${index+1}`;media.loading='lazy';media.decoding='async';frame.append(media)}
   media.addEventListener('error',()=>{if(editing)message('有素材暂时无法播放或显示，请检查文件格式。',true)});
   applyFrame(frame,item);const caption=element('figcaption','media-caption',item.caption||'');caption.hidden=!item.caption;
@@ -142,3 +143,27 @@ async function start(){
  updateMotionLabel();
 }
 start();
+
+/* long videos with sound (the opener and the 55s piece): a thin progress line you can scrub, so they read as video,
+   not a still cover; the opener also says how long it is and that it has sound, then fades that out */
+function addProgress(frame,media,hint){
+ const bar=element('div','media-progress'),fill=element('span','media-progress-fill');bar.append(fill);
+ bar.tabIndex=0;bar.setAttribute('role','slider');bar.setAttribute('aria-label','Video progress');bar.setAttribute('aria-valuemin','0');bar.setAttribute('aria-valuemax','100');
+ const clock=t=>`${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}`;
+ let raf=0;const draw=()=>{const d=media.duration,p=d>0?Math.min(1,(media.currentTime||0)/d):0;fill.style.transform=`scaleX(${p})`;bar.setAttribute('aria-valuenow',String(Math.round(p*100)));bar.setAttribute('aria-valuetext',d>0?`${clock(media.currentTime)} of ${clock(d)}`:'');raf=media.paused?0:requestAnimationFrame(draw)};
+ const run=()=>{if(!raf)raf=requestAnimationFrame(draw)};
+ media.addEventListener('play',run);media.addEventListener('seeked',draw);media.addEventListener('pause',draw);draw();if(!media.paused)run();
+ const seek=e=>{const r=bar.getBoundingClientRect(),d=media.duration;if(!(d>0)||!r.width)return;media.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*d;draw()};
+ bar.addEventListener('pointerdown',e=>{e.preventDefault();bar.setPointerCapture(e.pointerId);bar.classList.add('scrubbing');seek(e)});
+ bar.addEventListener('pointermove',e=>{if(bar.hasPointerCapture(e.pointerId))seek(e)});
+ const end=e=>{if(bar.hasPointerCapture(e.pointerId))bar.releasePointerCapture(e.pointerId);bar.classList.remove('scrubbing')};
+ bar.addEventListener('pointerup',end);bar.addEventListener('pointercancel',end);bar.addEventListener('click',e=>e.stopPropagation());
+ bar.addEventListener('keydown',e=>{const d=media.duration;if(!(d>0))return;const step={ArrowLeft:-5,ArrowRight:5,Home:-d,End:d}[e.key];if(step===undefined)return;e.preventDefault();media.currentTime=Math.max(0,Math.min(d-.1,media.currentTime+step));draw()});
+ frame.append(bar);
+ if(hint&&media.muted){
+  const tip=element('span','media-hint',`▶ ${clock(media.duration)} · ${matchMedia('(hover:hover)').matches?'Click':'Tap'} for sound`);frame.append(tip);
+  let timer=0;const hide=()=>{clearTimeout(timer);tip.classList.add('gone');setTimeout(()=>tip.remove(),600)};
+  media.addEventListener('playing',()=>{clearTimeout(timer);timer=setTimeout(hide,6000)},{once:true});
+  media.addEventListener('volumechange',()=>{if(!media.muted)hide()});
+ }
+}
