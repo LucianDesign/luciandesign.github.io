@@ -54,9 +54,9 @@ const still=document.createElement('img');still.className='still';still.alt='';s
 let heroHover;
 let renderer,scene,camera,holder,bodyMat,frameMat,lensMat,lights={},helpers=[],loaded=false,visible=true,inView=true,avatarDocked=false,dockProgress=0,heroScale=0,heroRenderHeight=0,avatarRenderHeight=108,raf=0,last=0,time=0,yawTime=0,envTime=0,frames=0;
 function anyMotion(){return(config.animate&&config.speed>0)||config.yawAnimate||config.envAnimate}
-function syncPause(){const paused=motionPaused||!anyMotion();$('#pause').setAttribute('aria-pressed',String(paused));$('#pause').setAttribute('aria-label',paused?'Play animation':'Pause animation');$('#pause-icon').textContent=paused?'▷':'Ⅱ';$('#pause-label').textContent=paused?'Play animation':'Pause animation'}
+function syncPause(){if(!$('#pause'))return;const paused=motionPaused||!anyMotion();$('#pause').setAttribute('aria-pressed',String(paused));$('#pause').setAttribute('aria-label',paused?'Play animation':'Pause animation');$('#pause-icon').textContent=paused?'▷':'Ⅱ';$('#pause-label').textContent=paused?'Play animation':'Pause animation'}
 syncPause();$('#param-modelAngle').disabled=config.yawAnimate;
-$('#pause').addEventListener('click',()=>{if(!anyMotion()){config.animate=true;config.yawAnimate=true;motionPaused=false;syncControls();save()}else motionPaused=!motionPaused;syncPause();last=0;unfreeze();requestRender()});
+$('#pause')?.addEventListener('click',()=>{if(!anyMotion()){config.animate=true;config.yawAnimate=true;motionPaused=false;syncControls();save()}else motionPaused=!motionPaused;syncPause();last=0;unfreeze();requestRender()});
 
 function updateOrientation(){const low=Math.min(config.yawMin,config.yawMax),high=Math.max(config.yawMin,config.yawMax);currentYaw=config.yawAnimate?low+(high-low)*(1-Math.cos(2*Math.PI*yawTime/config.yawDuration))/2:config.modelAngle;if(holder)holder.rotation.set(THREE.MathUtils.degToRad(config.modelPitch-3*Math.sin(Math.PI*dockProgress)),THREE.MathUtils.degToRad(currentYaw-18*dockProgress),THREE.MathUtils.degToRad(2*Math.sin(Math.PI*dockProgress)),'YXZ');if(config.yawAnimate){$('#param-modelAngle').value=currentYaw;$('[data-value="modelAngle"]').textContent=currentYaw.toFixed(1)}canvas.dataset.yaw=currentYaw.toFixed(3);canvas.dataset.pitch=config.modelPitch.toFixed(3);canvas.dataset.lightTime=time.toFixed(3)}
 
