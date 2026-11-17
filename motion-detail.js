@@ -4,7 +4,7 @@ let paused=reduced.matches;const visible=new Map(),videos=new Set();
 const mediaURL=value=>{if(!value)return null;try{const u=new URL(value,location.href);return ['http:','https:'].includes(u.protocol)?u.href:null}catch{return null}};
 function updateLabel(){toggle.textContent=paused?'Play animations ▷':'Pause animations Ⅱ';toggle.setAttribute('aria-pressed',String(paused))}
 function hydrate(v){if(v.dataset.src&&!v.getAttribute('src')){v.src=v.dataset.src;v.load()}}
-function syncPlayback(){const ranked=Array.from(visible).filter(([v,r])=>r>.25).sort((a,b)=>(a[0].muted-b[0].muted)||(b[1]-a[1])).slice(0,3).map(([v])=>v);for(const v of videos){if(!paused&&!document.hidden&&!dialog.open&&ranked.includes(v)){hydrate(v);v.play().then(()=>v.parentElement.querySelector('.video-fallback')?.remove()).catch(e=>{if(e?.name!=='NotAllowedError'||v.parentElement.querySelector('.video-fallback'))return;const hint=document.createElement('span');hint.className='video-fallback';hint.textContent='Click to play';v.parentElement.append(hint)})}else v.pause()}}
+function syncPlayback(){const ranked=Array.from(visible).filter(([v,r])=>r>.25).sort((a,b)=>(a[0].muted-b[0].muted)||(b[1]-a[1])).slice(0,3).map(([v])=>v);for(const v of videos){setWanted(v,!paused&&!document.hidden&&!dialog.open&&ranked.includes(v));if(!paused&&!document.hidden&&!dialog.open&&ranked.includes(v)){hydrate(v);v.play().then(()=>v.parentElement.querySelector('.video-fallback')?.remove()).catch(e=>{if(e?.name!=='NotAllowedError'||v.parentElement.querySelector('.video-fallback'))return;const hint=document.createElement('span');hint.className='video-fallback';hint.textContent='Click to play';v.parentElement.append(hint)})}else v.pause()}}
 /* a video far off screen gives its file back, so paused videos never hold every connection and starve the images */
 const release=v=>{if(v.getAttribute('src')){v.pause();v.removeAttribute('src');v.load()}};
 const prepare=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting&&!reduced.matches)hydrate(e.target)},{rootMargin:'150% 0px'});
@@ -14,10 +14,15 @@ const keep=new IntersectionObserver(entries=>{for(const e of entries)if(!e.isInt
 function markLoading(media,frame=media.parentElement){
  if(!frame)return;const on=()=>frame.classList.add('is-loading'),off=()=>frame.classList.remove('is-loading');
  if(media.tagName==='IMG'){if(!media.complete){on();media.addEventListener('load',off,{once:true});media.addEventListener('error',off,{once:true})}return}
- if(media.readyState<2)on();
- media.addEventListener('loadeddata',off);media.addEventListener('playing',off);media.addEventListener('canplay',off);
- media.addEventListener('waiting',on);media.addEventListener('emptied',on);
+ // a video keeps the sweep until it is actually moving, not just sitting on its first frame or poster; one that is not
+ // meant to play right now (paused by the toggle, off screen, not among those playing) only sweeps while it is blank
+ let moving=false;const refresh=()=>frame.classList.toggle('is-loading',(media.readyState<2&&!media.poster)||(media.dataset.wanted==='1'&&!moving));
+ media.addEventListener('playing',()=>{moving=true;refresh()});
+ for(const ev of ['waiting','pause','emptied'])media.addEventListener(ev,()=>{moving=false;refresh()});
+ for(const ev of ['loadstart','loadeddata','canplay','wantedchange'])media.addEventListener(ev,refresh);
+ refresh();
 }
+function setWanted(v,on){const value=on?'1':'';if((v.dataset.wanted||'')!==value){v.dataset.wanted=value;v.dispatchEvent(new Event('wantedchange'))}}
 
 const playback=new IntersectionObserver(entries=>{for(const e of entries){if(e.isIntersecting)visible.set(e.target,e.intersectionRatio);else visible.delete(e.target)}syncPlayback()},{threshold:[0,.25,.5,.75,1]});
 function openMedia(item){stage.replaceChildren();const el=document.createElement(item.type==='video'?'video':'img');el.src=mediaURL(item.src);if(item.type==='video'){el.controls=true;el.muted=true;el.loop=true;el.playsInline=true}else el.alt=item.title||'Motion artwork';stage.append(el);const caption=document.querySelector('#media-caption');caption.textContent=item.title||'';caption.hidden=!item.title;const source=mediaURL(item.source);dialogSource.hidden=!source;if(source)dialogSource.href=source;dialog.showModal();syncPlayback();if(item.type==='video')el.play().catch(()=>{});}

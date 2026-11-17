@@ -11,7 +11,7 @@ function message(text,error=false){status.textContent=text;status.classList.togg
 function markDirty(){dirty=true;message('有未保存的修改');}
 function setBusy(value){busy=value;save.disabled=value||!canSave;$('#add-media').disabled=value||!canSave;dropZone.disabled=value||!canSave;gallery.inert=value;}
 function safeAsset(src){return typeof src==='string'&&src.startsWith('./assets/reah/')&&!src.includes('..')&&!src.includes('\\')?src:null}
-function syncPlayback(){for(const [video,onScreen] of visible){if(onScreen&&!paused&&!document.hidden)video.play().catch(e=>{if(e?.name!=='NotAllowedError')return;const retry=video.parentElement.querySelector('.media-retry');if(retry)retry.hidden=false});else video.pause()}}
+function syncPlayback(){for(const [video,onScreen] of visible){setWanted(video,onScreen&&!paused&&!document.hidden);if(onScreen&&!paused&&!document.hidden)video.play().catch(e=>{if(e?.name!=='NotAllowedError')return;const retry=video.parentElement.querySelector('.media-retry');if(retry)retry.hidden=false});else video.pause()}}
 /* videos load only as they come near the screen, so a dozen large files never queue up ahead of the images */
 const hydrate=v=>{if(v.dataset.src&&!v.getAttribute('src')){v.src=v.dataset.src;v.load()}};
 const release=v=>{if(v.getAttribute('src')){v.pause();v.removeAttribute('src');v.load()}};
@@ -28,10 +28,15 @@ const watchVideo=v=>{observer.observe(v);prepare.observe(v);keep.observe(v);mark
 function markLoading(media,frame=media.parentElement){
  if(!frame)return;const on=()=>frame.classList.add('is-loading'),off=()=>frame.classList.remove('is-loading');
  if(media.tagName==='IMG'){if(!media.complete){on();media.addEventListener('load',off,{once:true});media.addEventListener('error',off,{once:true})}return}
- if(media.readyState<2)on();
- media.addEventListener('loadeddata',off);media.addEventListener('playing',off);media.addEventListener('canplay',off);
- media.addEventListener('waiting',on);media.addEventListener('emptied',on);
+ // a video keeps the sweep until it is actually moving, not just sitting on its first frame or poster; one that is not
+ // meant to play right now (paused by the toggle, off screen, not among those playing) only sweeps while it is blank
+ let moving=false;const refresh=()=>frame.classList.toggle('is-loading',(media.readyState<2&&!media.poster)||(media.dataset.wanted==='1'&&!moving));
+ media.addEventListener('playing',()=>{moving=true;refresh()});
+ for(const ev of ['waiting','pause','emptied'])media.addEventListener(ev,()=>{moving=false;refresh()});
+ for(const ev of ['loadstart','loadeddata','canplay','wantedchange'])media.addEventListener(ev,refresh);
+ refresh();
 }
+function setWanted(v,on){const value=on?'1':'';if((v.dataset.wanted||'')!==value){v.dataset.wanted=value;v.dispatchEvent(new Event('wantedchange'))}}
 
 function updateMotionLabel(){$('#motion-toggle').textContent=paused?'Play animations ▷':'Pause animations Ⅱ';$('#motion-toggle').setAttribute('aria-pressed',String(paused));syncPlayback()}
 $('#motion-toggle').addEventListener('click',()=>{paused=!paused;updateMotionLabel()});document.addEventListener('visibilitychange',syncPlayback);reduced.addEventListener('change',()=>{paused=reduced.matches;updateMotionLabel()});
