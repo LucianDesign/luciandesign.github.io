@@ -38,3 +38,12 @@
 dialog{padding-top:60px}
 dialog .close{top:16px;right:25px;width:32px;height:32px;padding:0;display:grid;place-items:center;line-height:1;font-size:0}
 dialog .close svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+
+/* video tag (videoTag in motion-detail.js): ▶ length at rest, what a click does on hover */
+.video-tag{position:absolute;left:14px;bottom:14px;z-index:2;display:grid;padding:7px 12px;border-radius:99px;background:#0a1008cc;color:var(--ink);border:1px solid #ffffff26;font:12px/1.2 Inter,system-ui,sans-serif;letter-spacing:.01em;backdrop-filter:blur(10px);pointer-events:none;transition:background .2s ease,color .2s ease,border-color .2s ease}
+.video-tag>span{grid-area:1/1;transition:opacity .2s ease,transform .2s ease;white-space:nowrap}
+.video-tag-hover{opacity:0;transform:translateY(4px)}
+@media(hover:hover){.media-open:hover .video-tag,.media-open:focus-visible .video-tag{background:var(--green);color:var(--bg);border-color:var(--green)}
+.media-open:hover .video-tag-rest,.media-open:focus-visible .video-tag-rest{opacity:0;transform:translateY(-4px)}
+.media-open:hover .video-tag-hover,.media-open:focus-visible .video-tag-hover{opacity:1;transform:none}}
+.video-fallback{bottom:52px}
