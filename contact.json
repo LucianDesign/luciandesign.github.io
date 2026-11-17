@@ -6,5 +6,6 @@
   "behance": "https://www.behance.net/psycholu",
   "dribbble": "https://dribbble.com/PsychoLu",
   "telegram": "https://t.me/PSYCHOLU",
-  "telegramQr": "./assets/contact/telegram-qr.webp"
+  "telegramQr": "./assets/contact/telegram-qr.webp",
+  "wechatQr": "./assets/contact/wechat-qr.webp"
 }
