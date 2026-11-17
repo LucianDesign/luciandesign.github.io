@@ -3,7 +3,7 @@
     {
       "id": "fb4ac19b-19c7-4f29-8413-2c14cd4388e1",
       "type": "video",
-      "src": "./assets/reah/uploads/2814326ed57b43809d936a5b526e9eb3.mp4",
+      "src": "./assets/reah/uploads/e421c11012fa4ce3957a1f4d8a881841.mp4",
       "span": "full",
       "fit": "contain",
       "width": 1920,
@@ -20,7 +20,7 @@
     {
       "id": "e6d2b0d6-8ed4-49b4-98a6-d26d8b269467",
       "type": "image",
-      "src": "./assets/reah/uploads/e2d0496c21114f36a3a0539c6ee5bc97.png",
+      "src": "./assets/reah/uploads/9469ad2ec1b54439a3f47f5ee195bf8c.png",
       "span": "full",
       "fit": "contain",
       "width": 1920,
@@ -28,6 +28,10 @@
       "positionX": 50,
       "positionY": 50,
       "caption": ""
+    },
+    {
+      "id": "reah-logo",
+      "type": "overview"
     },
     {
       "id": "e1df86cd-4d62-4d48-ba63-e4bc88cddf06",
@@ -78,6 +82,31 @@
       "positionX": 50,
       "positionY": 50,
       "caption": ""
+    },
+    {
+      "id": "f80eb7c0-e35e-4850-a014-0ee100a0db7f",
+      "type": "image",
+      "src": "./assets/reah/uploads/de63133b84294fd2ba0a1d28865e232e.png",
+      "span": "full",
+      "fit": "contain",
+      "width": 1920,
+      "height": 1080,
+      "positionX": 50,
+      "positionY": 50,
+      "caption": ""
+    },
+    {
+      "id": "ae180e9a-88d7-4657-9efe-06167d8e15c9",
+      "type": "video",
+      "src": "./assets/reah/uploads/c41313fa1208428db017b9a34f20e355.mp4",
+      "span": "full",
+      "fit": "contain",
+      "width": 1920,
+      "height": 1080,
+      "positionX": 50,
+      "positionY": 50,
+      "caption": "",
+      "hasAudio": false
     },
     {
       "id": "662718b7-c367-43af-ae2b-d01ccb4957a2",
@@ -167,6 +196,22 @@
       "positionY": 50,
       "caption": "",
       "hasAudio": false
+    },
+    {
+      "id": "d9512b08-67c1-4266-9762-8c0297355760",
+      "type": "image",
+      "src": "./assets/reah/uploads/39161fccbf2e4ca6a0b5f8daaf85f6fa.png",
+      "span": "full",
+      "fit": "contain",
+      "width": 1920,
+      "height": 1820,
+      "positionX": 50,
+      "positionY": 50,
+      "caption": ""
+    },
+    {
+      "id": "reah-ai",
+      "type": "overview"
     },
     {
       "id": "a42a55d1-2a45-438d-b4f9-f78a12592d5d",

@@ -15,6 +15,15 @@ for(const [i,card] of archiveCards.entries()){
 reduced.addEventListener('change',()=>{
  if(reduced.matches){archiveObserver.disconnect();for(const card of archiveCards)card.classList.add('is-revealed')}
 });
+// Each information card enters once, with its own sequence of content.
+const factsEntrance=[...document.querySelectorAll('.facts-grid .fact-card')];
+const factsEntranceObserver=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting){entry.target.classList.add('is-entered');factsEntranceObserver.unobserve(entry.target)}},{threshold:.5,rootMargin:'0px 0px -64px 0px'});
+if(!reduced.matches)factsEntrance.forEach((card,index)=>{
+ card.classList.add('fact-enter');card.style.setProperty('--card-enter-delay',`${index*110}ms`);
+ card.querySelectorAll('.card-kicker,.skill-stack>span,.timeline-entry,.ai-capability h3,.ai-capability li,.fact-bottom').forEach((item,step)=>{item.classList.add('fact-step');item.style.setProperty('--fact-step-delay',`${index*110+step*85}ms`)});
+ factsEntranceObserver.observe(card);
+});
+reduced.addEventListener('change',()=>{if(reduced.matches){factsEntranceObserver.disconnect();factsEntrance.forEach(card=>card.classList.remove('fact-enter'))}});
 const section=document.querySelector('.work-section'),pin=document.querySelector('.work-pin'),rail=document.querySelector('.work-rail'),progress=document.querySelector('.work-progress i');
 const hasCards=!!rail.querySelector('.project-card');section.classList.toggle('work-empty',!hasCards);
 const titleLines=Array.from(section.querySelectorAll('.work-title-line>span')),workIntro=section.querySelector('.work-intro'),workButton=section.querySelector('.more-work');
@@ -57,12 +66,28 @@ for(const b of document.querySelectorAll('.more-work')){b.setAttribute('aria-lab
 const contactModal=document.querySelector('#contact-dialog');contactModal.addEventListener('click',e=>{if(e.target!==contactModal)return;const r=contactModal.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)contactModal.close()});
 
 const contactDialog=document.querySelector('#contact-dialog'),contactLinks=document.querySelector('#contact-links');
-let contactLanguage='en',contactData={name:'Lucian Design',email:'',wechat:'',linkedin:''};
-function renderContact(){const zh=contactLanguage==='zh';document.querySelector('#contact-title').textContent=zh?'联系我':'Contact me';document.querySelectorAll('[data-contact-language]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.contactLanguage===contactLanguage)));contactLinks.replaceChildren();const entries=[[zh?'邮箱':'Email',contactData.email,'email'],[zh?'电话':'Phone',contactData.phone,'phone'],[zh?'微信':'WeChat',contactData.wechat,'wechat'],['Behance',contactData.behance,'link'],['Dribbble',contactData.dribbble,'link']].filter(([,value])=>value);for(const [label,value,type] of entries){const row=document.createElement('div');row.className='contact-row';const name=document.createElement('span');name.textContent=label;row.append(name);if(type==='email'||type==='phone'||type==='link'){const a=document.createElement('a');a.textContent=type==='link'?label+' ↗':value;a.href=type==='email'?'mailto:'+value:type==='phone'?'tel:'+value.replace(/[^+\d]/g,''):value;if(type==='link'){a.target='_blank';a.rel='noopener noreferrer'}row.append(a)}else{const text=document.createElement('span');text.textContent=value;row.append(text);const copy=document.createElement('button');copy.textContent=zh?'复制':'Copy';copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(value);copy.textContent=zh?'已复制':'Copied'}catch{copy.textContent=zh?'请选中复制':'Select to copy'}});row.append(copy)}contactLinks.append(row)}}
+let contactLanguage='en',contactData={name:'Lucian Design',email:'282346159@qq.com',phone:'+86 13717727627',wechat:'lujianwei120',telegram:'https://t.me/PSYCHOLU',telegramQr:'./assets/contact/telegram-qr.webp',behance:'https://www.behance.net/psycholu',dribbble:'https://dribbble.com/PsychoLu'};
+function renderContact(){const zh=contactLanguage==='zh';document.querySelector('#contact-title').textContent=zh?'联系我':'Contact me';document.querySelectorAll('[data-contact-language]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.contactLanguage===contactLanguage)));contactLinks.replaceChildren();const entries=[[zh?'邮箱':'Email',contactData.email,'email'],[zh?'电话':'Phone',contactData.phone,'phone'],[zh?'微信':'WeChat',contactData.wechat,'wechat'],['Telegram',contactData.telegram,'telegram'],['Behance',contactData.behance,'link'],['Dribbble',contactData.dribbble,'link']].filter(([,value])=>value);for(const [label,value,type] of entries){const row=document.createElement('div');row.className='contact-row';const name=document.createElement('span');name.textContent=label;row.append(name);if(type==='email'||type==='phone'||type==='link'||type==='telegram'){const a=document.createElement('a');a.textContent=type==='link'?label+' ↗':type==='telegram'?'@'+value.split('/').filter(Boolean).pop()+' ↗':value;a.href=type==='email'?'mailto:'+value:type==='phone'?'tel:'+value.replace(/[^+\d]/g,''):value;if(type==='link'||type==='telegram'){a.target='_blank';a.rel='noopener noreferrer'}row.append(a)}else{const text=document.createElement('span');text.textContent=value;row.append(text);const copy=document.createElement('button');copy.textContent=zh?'复制':'Copy';copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(value);copy.textContent=zh?'已复制':'Copied'}catch{copy.textContent=zh?'请选中复制':'Select to copy'}});row.append(copy)}if((type==='telegram'&&contactData.telegramQr)||(type==='wechat'&&contactData.wechatQr)){const qr=document.createElement('button');qr.type='button';qr.className='contact-qr-trigger';qr.textContent=zh?'二维码':'QR code';qr.dataset.qrContact=type;row.append(qr)}contactLinks.append(row)}}
 
-fetch('./contact.json?v=footer-contact-2').then(r=>r.ok?r.json():Promise.reject()).then(data=>{contactData={...contactData,...data};renderContact()}).catch(()=>renderContact());
+fetch('./contact.json?v=telegram-local-1').then(r=>r.ok?r.json():Promise.reject()).then(data=>{contactData={...contactData,...data};renderContact()}).catch(()=>renderContact());
 document.querySelectorAll('[data-contact-language]').forEach(b=>b.addEventListener('click',()=>{contactLanguage=b.dataset.contactLanguage;renderContact()}));
 document.querySelector('#avatar-contact').addEventListener('click',()=>{renderContact();contactDialog.showModal();syncMotionCovers()});contactDialog.querySelector('.contact-close').addEventListener('click',()=>contactDialog.close());renderContact();
+
+const qrDialog=document.querySelector('#contact-qr-dialog'),qrImage=document.querySelector('#contact-qr-image'),qrLink=document.querySelector('#contact-qr-link');
+function showContactQR(kind){
+ const source=contactData[kind+'Qr'];if(!source||!source.startsWith('./assets/contact/'))return;
+ const telegram=kind==='telegram';document.querySelector('#contact-qr-title').textContent=telegram?'Telegram':'WeChat';qrImage.alt=telegram?'Telegram contact QR code':'WeChat contact QR code';qrImage.src=source;
+ qrLink.hidden=!telegram;if(telegram){qrLink.href=contactData.telegram;qrLink.textContent='@'+contactData.telegram.split('/').filter(Boolean).pop()+' ↗'}
+ qrDialog.showModal();
+}
+document.addEventListener('click',async event=>{
+ const qr=event.target.closest('[data-qr-contact]');if(qr){showContactQR(qr.dataset.qrContact);return}
+ const copy=event.target.closest('[data-copy-contact]');if(!copy)return;
+ const value=contactData[copy.dataset.copyContact];if(!value)return;
+ try{await navigator.clipboard.writeText(value);const label=copy.textContent;copy.textContent='Copied';document.querySelector('#contact-copy-status').textContent='Copied: '+value;setTimeout(()=>copy.textContent=label,1600)}catch{copy.textContent=value;document.querySelector('#contact-copy-status').textContent='Select and copy: '+value}
+});
+qrDialog.querySelector('.contact-qr-close').addEventListener('click',()=>qrDialog.close());
+qrDialog.addEventListener('click',event=>{if(event.target!==qrDialog)return;const r=qrDialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)qrDialog.close()});
 
 // Motion covers play only while visible, in either work collection.
 const motionCovers=[...document.querySelectorAll('video[data-cover-src]')],coverVisibility=new Map();

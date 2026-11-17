@@ -6,12 +6,18 @@ let items=[],savedItems=[],revision='',canSave=false,dirty=false,busy=false,paus
 let replacementId=null;
 const replacementInput=$('#replacement-input');
 const visible=new Map();
+const MODULE_LABELS={'reah-overview':'项目介绍 · 文字模块','reah-logo':'Logo · 文字模块','reah-ai':'Designing with AI · 文字模块'};
 function message(text,error=false){status.textContent=text;status.classList.toggle('error',error)}
 function markDirty(){dirty=true;message('有未保存的修改');}
 function setBusy(value){busy=value;save.disabled=value||!canSave;$('#add-media').disabled=value||!canSave;dropZone.disabled=value||!canSave;gallery.inert=value;}
 function safeAsset(src){return typeof src==='string'&&src.startsWith('./assets/reah/')&&!src.includes('..')&&!src.includes('\\')?src:null}
-function syncPlayback(){for(const [video,onScreen] of visible){if(onScreen&&!paused&&!document.hidden)video.play().catch(()=>{const retry=video.parentElement.querySelector('.media-retry');if(retry)retry.hidden=false});else video.pause()}}
-const observer=new IntersectionObserver(entries=>{for(const e of entries)visible.set(e.target,e.isIntersecting);syncPlayback()},{rootMargin:'100px',threshold:.05});
+function syncPlayback(){for(const [video,onScreen] of visible){if(onScreen&&!paused&&!document.hidden)video.play().catch(e=>{if(e?.name!=='NotAllowedError')return;const retry=video.parentElement.querySelector('.media-retry');if(retry)retry.hidden=false});else video.pause()}}
+/* videos load only as they come near the screen, so a dozen large files never queue up ahead of the images */
+const hydrate=v=>{if(v.dataset.src&&!v.getAttribute('src')){v.src=v.dataset.src;v.load()}};
+const release=v=>{if(v.getAttribute('src')){v.pause();v.removeAttribute('src');v.load()}};
+const prepare=new IntersectionObserver(entries=>{for(const e of entries){if(e.isIntersecting)hydrate(e.target);else release(e.target)}},{rootMargin:'600px 0px'});
+const observer=new IntersectionObserver(entries=>{for(const e of entries){visible.set(e.target,e.isIntersecting);if(e.isIntersecting)hydrate(e.target)}syncPlayback()},{rootMargin:'100px',threshold:.05});
+const watchVideo=v=>{observer.observe(v);prepare.observe(v)};
 function updateMotionLabel(){$('#motion-toggle').textContent=paused?'Play animations ▷':'Pause animations Ⅱ';$('#motion-toggle').setAttribute('aria-pressed',String(paused));syncPlayback()}
 $('#motion-toggle').addEventListener('click',()=>{paused=!paused;updateMotionLabel()});document.addEventListener('visibilitychange',syncPlayback);reduced.addEventListener('change',()=>{paused=reduced.matches;updateMotionLabel()});
 function element(tag,cls,text){const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el}
@@ -24,7 +30,7 @@ function controls(item,card,frame,caption,index){
  handle.addEventListener('dragstart',e=>{if(busy){e.preventDefault();return}dragged=item.id;e.dataTransfer.setData('text/plain','reah:'+item.id);e.dataTransfer.effectAllowed='move';card.classList.add('dragging')});
  handle.addEventListener('dragend',()=>{dragged=null;gallery.querySelectorAll('.dragging,.drop-before').forEach(x=>x.classList.remove('dragging','drop-before'))});
  panel.append(handle);const up=button('↑','上移素材',()=>move(item.id,-1)),down=button('↓','下移素材',()=>move(item.id,1));up.disabled=index===0;down.disabled=index===items.length-1;panel.append(up,down);
- if(item.type==='overview'){panel.classList.add('text-module-controls');panel.append(element('span','module-label','项目介绍 · 文字模块'));return panel;}
+ if(item.type==='overview'){panel.classList.add('text-module-controls');panel.append(element('span','module-label',MODULE_LABELS[item.id]||'文字模块'));return panel;}
  function select(label,options,value,change){const wrap=element('label','',label),s=document.createElement('select');s.setAttribute('aria-label',label);for(const [v,t] of options){const o=element('option','',t);o.value=v;s.append(o)}s.value=value;s.addEventListener('change',()=>change(s.value));wrap.append(s);panel.append(wrap);return s}
  select('宽度',[['full','全宽'],['half','半宽']],item.span||'full',value=>{item.span=value;card.classList.toggle('full',value==='full');markDirty()});
  const positions=[];
@@ -45,12 +51,14 @@ function render(){
  observer.disconnect();for(const video of visible.keys())video.pause();visible.clear();gallery.replaceChildren();
  for(const [index,item] of items.entries()){
   if(item.type==='overview'){
-   const card=$('#reah-overview-template').content.firstElementChild.cloneNode(true);card.classList.add('media-card','full','text-module');card.dataset.id=item.id;
+   const template=document.getElementById(item.id+'-template');if(!template)continue;
+   const card=template.content.firstElementChild.cloneNode(true);card.classList.add('media-card','full','text-module');card.dataset.id=item.id;
+   card.querySelectorAll('video').forEach(v=>{v.muted=true;v.defaultMuted=true;watchVideo(v)});
    if(editing)card.prepend(controls(item,card,null,null,index));gallery.append(card);bindDrop(card,item);continue;
   }
   const src=safeAsset(item.src);if(!src)continue;
   const card=element('figure','media-card'+(item.span==='half'?'':' full'));card.dataset.id=item.id;
-  const frame=element('div','media-frame'),media=document.createElement(item.type==='video'?'video':'img');media.src=src;media.width=item.width||1920;media.height=item.height||1080;media.draggable=false;
+  const frame=element('div','media-frame'),media=document.createElement(item.type==='video'?'video':'img');if(item.type==='video')media.dataset.src=src;else media.src=src;media.width=item.width||1920;media.height=item.height||1080;media.draggable=false;
   if(item.type==='video'){
    media.muted=true;media.defaultMuted=true;media.loop=true;media.playsInline=true;media.preload='metadata';if(safeAsset(item.poster))media.poster=item.poster;media.setAttribute('aria-label',item.caption||`Reah motion ${index+1}`);
    if(item.hasAudio===true&&item.soundEnabled!==false){
@@ -74,7 +82,7 @@ function render(){
    frame.addEventListener('click',e=>{if(e.target.closest('button'))return;sound.click()});
 
    }
-   const retry=button('Play video ▷','Play video',()=>{media.play().then(()=>retry.hidden=true).catch(()=>{retry.textContent='Try playing again'})});retry.className='media-retry';retry.hidden=true;frame.append(media,retry);observer.observe(media);
+   const retry=button('Play video ▷','Play video',()=>{media.play().then(()=>retry.hidden=true).catch(()=>{retry.textContent='Try playing again'})});retry.className='media-retry';retry.hidden=true;media.addEventListener('playing',()=>retry.hidden=true);frame.append(media,retry);watchVideo(media);
   }else{media.alt=item.caption||`Reah project visual ${index+1}`;media.loading='lazy';media.decoding='async';frame.append(media)}
   media.addEventListener('error',()=>{if(editing)message('有素材暂时无法播放或显示，请检查文件格式。',true)});
   applyFrame(frame,item);const caption=element('figcaption','media-caption',item.caption||'');caption.hidden=!item.caption;

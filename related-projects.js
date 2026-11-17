@@ -1,11 +1,13 @@
 const projects=[
-  ['reah.html','Reah','./assets/reah/cover.webp'],
-  ['genesis-nft.html','Genesis NFT design','./assets/genesis-nft/banner.webp'],
+  ['reah.html','Reah brand identity','./assets/reah/cover.webp'],
   ['motion.html','Motion videos & animated posters','./assets/motion/01-2016792241185210368.webp'],
-  ['tencent-sports.html','Tencent Sports 7.0','./assets/tencent-sports/00-1.webp'],
+  ['genesis-nft.html','Genesis NFT design','./assets/genesis-nft/banner.webp'],
   ['drago.html','DraGo','./assets/drago/00-1.webp'],
   ['safeis.html','SAFEIS','./assets/safeis/00-1.webp'],
-  ['tencent-stats.html','Tencent Sports · Stats UI','./assets/tencent-stats/module-00-1.webp']
+  ['safeis-spear.html','SAFEIS Spear · UX','./assets/safeis-spear/00.webp'],
+  ['tencent-sports.html','Tencent Sports 7.0','./assets/tencent-sports/00-1.webp'],
+  ['tencent-stats.html','Tencent Sports · Stats UI','./assets/tencent-stats/module-00-1.webp'],
+  ['tencent-badges.html','Tencent Sports · Growth badges','./assets/tencent-badges/03.webp']
 ];
 const current=location.pathname.split('/').pop();
 const strip=document.createElement('nav');

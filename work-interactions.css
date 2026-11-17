@@ -20,8 +20,8 @@
 .capability-list{display:flex;flex-direction:column;min-width:0}
 .capability-row{position:relative;min-height:216px;padding:0 42px 42px 0;min-width:0}
 .capability-number{position:absolute;right:0;top:7px;color:#82818a;font:400 13px/1.4 'Space Mono',monospace}
-.capability-title{display:block;max-width:100%;padding:0;border:0;background:none;color:#292b32;text-align:left;font:400 clamp(26px,2.65cqw,36px)/1.22 Inter,system-ui,sans-serif;letter-spacing:-.045em;cursor:pointer}
-.capability-row h3{margin:0;font:inherit}
+.capability-title{display:block;max-width:100%;margin:0;color:#292b32;font:400 clamp(26px,2.65cqw,36px)/1.22 Inter,system-ui,sans-serif;letter-spacing:-.045em}
+.capability-row h3{margin:0}
 .capability-title:focus-visible{outline:1px solid #292b32;outline-offset:8px}
 .capability-row p{max-width:450px;margin:20px 0 0;color:#7b7b89;font:400 clamp(14px,1.45cqw,17px)/1.6 Inter,system-ui,sans-serif;letter-spacing:-.025em}
 .capability-preview{width:min(100%,370px);margin:48px 0 0;opacity:0;visibility:hidden;transform:translateY(7px);transition:opacity .16s ease,transform .24s ease,visibility 0s .24s;pointer-events:none}

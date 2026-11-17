@@ -1,6 +1,7 @@
 // Move one live model continuously between the floating contact and resume header.
 export function setupResumeAvatar({button}){
  const section=document.querySelector('.resume-section'),slot=document.querySelector('.resume-avatar-slot'),work=document.querySelector('.work-section');
+ const contactTitle=document.querySelector('#footer-contact-title');
  if(!section||!slot)return;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)'),clamp=v=>Math.max(0,Math.min(1,v));
  let queued=false,currentX=0,currentY=0,previousTime=0,previousOpacity=1;
@@ -28,8 +29,17 @@ export function setupResumeAvatar({button}){
     opacity=anchor.bottom<=0&&ease===1?0:1;
    }
   }
+  // Near the footer the portrait stops at the Contact heading and scrolls away with the page.
+  let pinned=false;
+  if(contactTitle&&button.classList.contains('is-docked')){
+   const title=contactTitle.getBoundingClientRect(),box=button.getBoundingClientRect(),size=button.offsetHeight;
+   const homeTop=box.top-currentY,homeLeft=box.left-currentX;
+   const clear=homeLeft+size+16<=title.left;
+   const stop=clear?title.top+title.height/2-size/2:title.top-size-16;
+   if(stop<homeTop){x=0;y=stop-homeTop;opacity=1;ring=1;pinned=true}
+  }
   const dt=previousTime?Math.min(64,Math.max(0,now-previousTime)):16;previousTime=now;
-  const follow=reduced.matches||opacity===0||previousOpacity===0?1:1-Math.exp(-dt/85);
+  const follow=pinned||reduced.matches||opacity===0||previousOpacity===0?1:1-Math.exp(-dt/85);
   currentX+=(x-currentX)*follow;currentY+=(y-currentY)*follow;previousOpacity=opacity;
   const unsettled=Math.abs(x-currentX)+Math.abs(y-currentY)>.12;
   if(!unsettled){currentX=x;currentY=y}

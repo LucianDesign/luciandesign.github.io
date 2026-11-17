@@ -15,3 +15,16 @@
 .motion-collection .motion-grid{display:flex;flex-direction:column;align-items:stretch;gap:28px}.motion-row{display:grid;gap:28px;align-items:start}.motion-row:empty{display:none}.motion-row-full{grid-template-columns:minmax(0,1fr)}.motion-row-landscape{grid-template-columns:repeat(2,minmax(0,1fr))}.motion-row-square{grid-template-columns:repeat(3,minmax(0,1fr))}@media(max-width:700px){.motion-collection .motion-grid,.motion-row{gap:16px}}
 
 .product-nav{flex-wrap:wrap}.motion-row-portrait{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+/* sound toggle, ported from the Reah page */
+.motion-piece .media-sound{position:absolute;z-index:3;display:grid;place-items:center;width:42px;height:42px;padding:10px;border:1px solid #ffffff55;border-radius:50%;background:#141414ba;color:#fff;backdrop-filter:blur(12px);left:var(--sound-x,calc(100% - 34px));top:var(--sound-y,calc(100% - 34px));transform:translate(-50%,-50%);transition:left .24s ease-out,top .24s ease-out,background .2s ease;pointer-events:none}
+.motion-piece .media-sound svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.motion-piece.sound-following .media-sound{transition:left .08s linear,top .08s linear,background .2s ease}
+@media(hover:none),(pointer:coarse){.motion-piece .media-sound{pointer-events:auto}}
+@media(hover:hover) and (pointer:fine){.motion-piece.has-sound .media-open{cursor:none}}
+@media(prefers-reduced-motion:reduce){.motion-piece .media-sound{transition:none}}
+/* the bottom-right ↗ only where an original X post exists, and never on a sound card */
+.motion-piece:not(.has-source) .media-open:after,.motion-piece.has-sound .media-open:after{display:none}
+
+.media-open.fit-contain{aspect-ratio:var(--cell-ratio,16/9);display:grid;place-items:center;background:#0b0f0a}
+.media-open.fit-contain img{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto!important;object-fit:contain}

@@ -54,3 +54,11 @@
 @media(max-width:380px){.resume-sidebar{grid-template-columns:1fr}.resume-header{gap:12px}.resume-sheet .resume-name{font-size:28px}}
 
 .is-reading-resume .panel-open{display:none}
+
+/* Download PDF: solid button in the name row, vertically centred on the avatar */
+.resume-header .resume-download{margin-left:auto;align-self:center;flex:none;gap:16px;padding:18px 30px;border:0;border-radius:100px;background:#0b0b0b;color:var(--lime);font:400 16px/1 'Space Mono',monospace;letter-spacing:.01em;transition:background-color .2s,transform .2s}
+.resume-header .resume-download,.resume-header .resume-download span{font-family:'Space Mono',monospace!important}
+.resume-header .resume-download span{font-size:20px;line-height:1}
+.resume-header .resume-download:hover{opacity:1;background:#262626;transform:translateY(-2px)}
+.resume-header .resume-download:focus-visible{outline:2px solid #0b0b0b;outline-offset:4px}
+@media(max-width:700px){.resume-header{flex-wrap:wrap}.resume-header .resume-download{margin-left:0;width:100%;justify-content:center;padding:16px 24px;font-size:15px}}

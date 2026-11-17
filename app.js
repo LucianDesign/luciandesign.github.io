@@ -1,7 +1,7 @@
 import {setupHeroDotHover} from './hero-dot-hover.js?v=f806e0965f9c';
 import {setupHeroCursor} from './hero-cursor.js?v=8f6673809ed4';
 import {setupHeroHover} from './hero-hover.js?v=3e72b7e0c308';
-import {setupResumeAvatar} from './resume-avatar.js?v=7b7c18abbcc2';
+import {setupResumeAvatar} from './resume-avatar.js?v=contact-stop-1';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {HERO_CAMERA_Z,viewportLayout,responsiveComposition} from './hero-render-math.js?v=d2ebd82ffe8d';
