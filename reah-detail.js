@@ -15,9 +15,24 @@ function syncPlayback(){for(const [video,onScreen] of visible){if(onScreen&&!pau
 /* videos load only as they come near the screen, so a dozen large files never queue up ahead of the images */
 const hydrate=v=>{if(v.dataset.src&&!v.getAttribute('src')){v.src=v.dataset.src;v.load()}};
 const release=v=>{if(v.getAttribute('src')){v.pause();v.removeAttribute('src');v.load()}};
-const prepare=new IntersectionObserver(entries=>{for(const e of entries){if(e.isIntersecting)hydrate(e.target);else release(e.target)}},{rootMargin:'600px 0px'});
+/* start fetching a screen and a half ahead; only give the file back once it is four screens away, so scrolling back
+   up finds it still loaded instead of downloading it again */
+const prepare=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting)hydrate(e.target)},{rootMargin:'150% 0px'});
+const keep=new IntersectionObserver(entries=>{for(const e of entries)if(!e.isIntersecting)release(e.target)},{rootMargin:'400% 0px'});
 const observer=new IntersectionObserver(entries=>{for(const e of entries){visible.set(e.target,e.isIntersecting);if(e.isIntersecting)hydrate(e.target)}syncPlayback()},{rootMargin:'100px',threshold:.05});
-const watchVideo=v=>{observer.observe(v);prepare.observe(v)};
+const watchVideo=v=>{observer.observe(v);prepare.observe(v);keep.observe(v);markLoading(v);
+ // once data is back, a video that should be playing but isn't (an earlier play() lost to a reload) starts again
+ v.addEventListener('canplay',()=>{if(visible.get(v)&&!paused&&!document.hidden&&v.paused)v.play().catch(()=>{})})};
+/* a soft light sweeping across a frame while its picture or video is still on its way (or buffering), so an empty
+   frame reads as loading, not as a still; transform-only, so it costs the compositor almost nothing */
+function markLoading(media,frame=media.parentElement){
+ if(!frame)return;const on=()=>frame.classList.add('is-loading'),off=()=>frame.classList.remove('is-loading');
+ if(media.tagName==='IMG'){if(!media.complete){on();media.addEventListener('load',off,{once:true});media.addEventListener('error',off,{once:true})}return}
+ if(media.readyState<2)on();
+ media.addEventListener('loadeddata',off);media.addEventListener('playing',off);media.addEventListener('canplay',off);
+ media.addEventListener('waiting',on);media.addEventListener('emptied',on);
+}
+
 function updateMotionLabel(){$('#motion-toggle').textContent=paused?'Play animations ▷':'Pause animations Ⅱ';$('#motion-toggle').setAttribute('aria-pressed',String(paused));syncPlayback()}
 $('#motion-toggle').addEventListener('click',()=>{paused=!paused;updateMotionLabel()});document.addEventListener('visibilitychange',syncPlayback);reduced.addEventListener('change',()=>{paused=reduced.matches;updateMotionLabel()});
 function element(tag,cls,text){const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el}
@@ -84,7 +99,7 @@ function render(){
    }
    const retry=button('Play video ▷','Play video',()=>{media.play().then(()=>retry.hidden=true).catch(()=>{retry.textContent='Try playing again'})});retry.className='media-retry';retry.hidden=true;media.addEventListener('playing',()=>retry.hidden=true);frame.append(media,retry);watchVideo(media);
    if(item.hasAudio===true)media.addEventListener('loadedmetadata',()=>{if(media.duration>=30&&!frame.querySelector('.media-progress'))addProgress(frame,media,index===0)});
-  }else{media.alt=item.caption||`Reah project visual ${index+1}`;media.loading='lazy';media.decoding='async';frame.append(media)}
+  }else{media.alt=item.caption||`Reah project visual ${index+1}`;media.loading='lazy';media.decoding='async';frame.append(media);markLoading(media,frame)}
   media.addEventListener('error',()=>{if(editing)message('有素材暂时无法播放或显示，请检查文件格式。',true)});
   applyFrame(frame,item);const caption=element('figcaption','media-caption',item.caption||'');caption.hidden=!item.caption;
   if(editing)card.append(controls(item,card,frame,caption,index));card.append(frame,caption);gallery.append(card);

@@ -53,3 +53,8 @@ body:not(.editing) .reah-gallery{padding-top:0}.editing .editor-bar{margin-top:2
 .media-progress:focus-visible{outline:2px solid #fff;outline-offset:-2px}
 .media-hint{position:absolute;left:16px;bottom:22px;z-index:2;padding:7px 12px;border:1px solid #ffffff40;border-radius:99px;background:#141414b8;color:#fff;font:12px/1.4 Inter,system-ui,sans-serif;letter-spacing:.01em;backdrop-filter:blur(12px);pointer-events:none;transition:opacity .5s ease,transform .5s ease}
 .media-hint.gone{opacity:0;transform:translateY(4px)}
+
+/* loading sweep (markLoading in the page script) */
+.is-loading:after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(100deg,transparent 20%,#ffffff0d 35%,#ffffff2b 50%,#ffffff0d 65%,transparent 80%);transform:translateX(-100%);animation:media-sweep 1.8s cubic-bezier(.4,0,.2,1) infinite;will-change:transform}
+@keyframes media-sweep{to{transform:translateX(100%)}}
+@media (prefers-reduced-motion:reduce){.is-loading:after{animation:none;transform:none;background:#ffffff0a}}
